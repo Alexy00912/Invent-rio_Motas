@@ -1,0 +1,8 @@
+com\starterkit\springboot\config\SQLiteDialect$SQLiteIdentityColumnSupport.class
+com\starterkit\springboot\TodoSqliteCleanApplication.class
+com\starterkit\springboot\config\SQLiteDialect.class
+com\starterkit\springboot\todo\Todo.class
+com\starterkit\springboot\config\SQLiteDialect$1.class
+com\starterkit\springboot\todo\TodoController.class
+com\starterkit\springboot\todo\TodoRepository.class
+com\starterkit\springboot\todo\TodoRequest.class
