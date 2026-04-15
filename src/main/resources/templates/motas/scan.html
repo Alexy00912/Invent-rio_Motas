@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: head(${titulo})"></head>
+<body>
+    <nav th:replace="fragments/navbar :: navbar('motas')"></nav>
+
+<main class="container py-4" data-page="motas-detalhe">
+    <section class="app-hero mb-4">
+        <div class="app-hero-copy">
+            <span class="badge text-bg-light mb-3">Ficha + QR</span>
+            <h1 class="display-6 mb-2" th:text="${mota.modelo}">Modelo da Mota</h1>
+            <p class="text-secondary mb-0">
+                O QR code guarda apenas o código único da mota.
+                Num telemóvel abre <code>/motas/scan</code> e aponta a câmara ao QR.
+            </p>
+        </div>
+        <div class="app-hero-actions">
+            <button type="button" class="btn btn-outline-light btn-lg" onclick="window.print()">Imprimir QR</button>
+            <a class="btn btn-outline-light btn-lg" th:href="@{/motas/scan}">Ler QR</a>
+            <a class="btn btn-primary btn-lg" th:href="@{/motas/{id}/editar(id=${mota.id})}">Editar</a>
+        </div>
+    </section>
+
+    <div class="row g-4">
+
+        <!-- Dados da Mota -->
+        <div class="col-lg-7">
+            <section class="card shadow-sm border-0 h-100">
+                <div class="card-body p-4">
+                    <h2 class="h4 mb-4">Dados da Mota</h2>
+
+                    <dl class="row mb-0">
+
+                        <dt class="col-sm-4">ID</dt>
+                        <dd class="col-sm-8" th:text="${mota.id}">1</dd>
+
+                        <dt class="col-sm-4">Código Único</dt>
+                        <dd class="col-sm-8">
+                            <span class="qr-code-label" th:text="${mota.codigoUnico}">uuid</span>
+                        </dd>
+
+                        <dt class="col-sm-4">Marca</dt>
+                        <dd class="col-sm-8" th:text="${mota.marca}">Yamaha</dd>
+
+                        <dt class="col-sm-4">Modelo</dt>
+                        <dd class="col-sm-8" th:text="${mota.modelo}">DT50R</dd>
+
+                        <dt class="col-sm-4">Cilindrada</dt>
+                        <dd class="col-sm-8" th:text="${mota.cilindrada}">50cc</dd>
+
+                        <dt class="col-sm-4">Ano</dt>
+                        <dd class="col-sm-8" th:text="${mota.ano}">2005</dd>
+
+                        <dt class="col-sm-4">Preço</dt>
+                        <dd class="col-sm-8" th:text="${mota.cost != null ? mota.cost + ' €' : '-'}">0.00 €</dd>
+
+                        <dt class="col-sm-4">Kilometragem</dt>
+                        <dd class="col-sm-8" th:text="${mota.kilometragem}">12000 km</dd>
+
+                        <dt class="col-sm-4">Cor</dt>
+                        <dd class="col-sm-8" th:text="${mota.cor}">Azul</dd>
+
+                        <dt class="col-sm-4">Garantia</dt>
+                        <dd class="col-sm-8" th:text="${mota.garantia} ? 'Sim' : 'Não'">Sim</dd>
+
+                        <dt class="col-sm-4">Descrição</dt>
+                        <dd class="col-sm-8" th:text="${mota.description} ?: '-'">Descrição da mota</dd>
+
+                    </dl>
+                </div>
+            </section>
+        </div>
+
+        <!-- QR Code + Imagem -->
+        <div class="col-lg-5">
+
+            <section class="card shadow-sm border-0 mb-4">
+                <div class="card-body p-4">
+                    <h2 class="h4 mb-3">QR Code</h2>
+
+                    <div class="qr-wrapper"
+                         id="qrCodeContainer"
+                         th:attr="data-qr-code=${mota.codigoUnico}">
+                    </div>
+
+                    <p class="text-secondary small mt-3 mb-0">
+                        O QR guarda apenas o código único da mota para poder ser
+                        identificado rapidamente.
+                    </p>
+                </div>
+            </section>
+
+            <section class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                    <h2 class="h4 mb-3">Imagem</h2>
+
+                <img th:if="${mota.imagemPath != null}"
+                    class="mota-detail-image"
+                    th:src="@{/uploads/{img}(img=${mota.imagemPath})}"
+                    alt="Imagem da mota">
+
+                    <p th:if="${mota.imagemPath == null}" class="text-secondary mb-0">
+                        Esta mota ainda não tem imagem associada.
+                    </p>
+
+                </div>
+            </section>
+
+        </div>
+
+    </div>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<div th:replace="fragments/scripts :: scripts(${pageScript})"></div>
+
+</body>
+</html>

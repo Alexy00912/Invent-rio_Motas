@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: head(${titulo})"></head>
+<body>
+    <nav th:replace="fragments/navbar :: navbar('motas')"></nav>
+
+<main class="container py-4" data-page="motas-lista">
+
+    <section class="app-hero mb-4">
+        <div class="app-hero-copy">
+            <span class="badge text-bg-light mb-3">Frontend Thymeleaf + Bootstrap</span>
+            <h1 class="display-6 mb-2">Motas registadas</h1>
+            <p class="text-secondary mb-0">
+                Lista renderizada em HTML com operações feitas pela API JSON em
+                <code>/api/motas</code>.
+            </p>
+        </div>
+
+        <div class="app-hero-actions">
+            <a class="btn btn-outline-light btn-lg" th:href="@{/motas/scan}">
+                Ler QR
+            </a>
+
+            <a class="btn btn-primary btn-lg" th:href="@{/motas/novo}">
+                Nova mota
+            </a>
+        </div>
+    </section>
+
+    <section class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+            <div class="row g-3 align-items-end">
+
+                <div class="col-md-8">
+                    <label class="form-label" for="adminApiKey">
+                        Chave de administrador
+                    </label>
+
+                    <input type="password"
+                           class="form-control"
+                           id="adminApiKey"
+                           placeholder="Necessária para criar, editar e apagar">
+                </div>
+
+                <div class="col-md-4">
+                    <p class="form-text mb-0">
+                        A chave é guardada apenas na sessão do browser e enviada
+                        no header <code>Authorization: Bearer ...</code>.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <div id="feedback" class="mb-3"></div>
+
+    <section class="card shadow-sm border-0">
+
+        <div class="card-header bg-white border-0 pt-4 px-4">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="h4 mb-1">Lista de motas</h2>
+
+                    <p class="text-secondary mb-0"
+                       th:text="${#lists.size(motas)} + ' registos encontrados'">
+                       0 registos encontrados
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body px-0 pt-0 d-none d-lg-block">
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle mb-0">
+
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-4">ID</th>
+                            <th>Marca</th>
+                            <th>Modelo</th>
+                            <th>Cilindrada</th>
+                            <th>Ano</th>
+                            <th>Kilometragem</th>
+                            <th>Preço</th>
+                            <th>Cor</th>
+                            <th>Imagem</th>
+                            <th>QR</th>
+                            <th>Garantia</th>
+                            <th>Seguro</th>
+                            <th class="text-end pe-4">Ações</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        <tr th:if="${#lists.isEmpty(motas)}">
+                            <td colspan="12" class="text-center py-5 text-secondary">
+                                Ainda não existem motas registadas.
+                            </td>
+                        </tr>
+
+                        <tr th:each="mota : ${motas}">
+
+                            <td class="ps-4 fw-semibold"
+                                th:text="${mota.id}">1</td>
+
+                            <td th:text="${mota.marca}">Yamaha</td>
+
+                            <td th:text="${mota.modelo}">DT50R</td>
+
+                            <td th:text="${mota.cilindrada}">50cc</td>
+
+                            <td th:text="${mota.ano}">2005</td>
+
+                            <td th:text="${mota.kilometragem}">12000</td>
+
+                            <td th:text="${mota.cost}">0 €</td>
+
+                            <td th:text="${mota.cor}">Azul</td>
+
+                            <td>
+                                <img th:if="${mota.imagemPath != null}"
+                                     class="mota-thumb"
+                                        th:src="@{/uploads/{img}(img=${mota.imagemPath})}"
+                                     alt="Imagem da mota">
+
+                                <span th:if="${mota.imagemPath == null}"
+                                      class="text-secondary">
+                                      Sem imagem
+                                </span>
+                            </td>
+
+                            <td>
+                                <a class="btn btn-sm btn-outline-dark"
+                                   th:href="@{/motas/{id}(id=${mota.id})}">
+                                   Ver QR
+                                </a>
+                            </td>
+
+                            <td>
+                                <span class="badge rounded-pill"
+                                      th:classappend="${mota.garantia} ? ' text-bg-success' : ' text-bg-secondary'"
+                                      th:text="${mota.garantia} ? 'Sim' : 'Não'">
+                                </span>
+                            </td>
+
+                            <td>
+                                <span class="badge rounded-pill"
+                                      th:classappend="${mota.seguro} ? ' text-bg-success' : ' text-bg-secondary'"
+                                      th:text="${mota.seguro} ? 'Sim' : 'Não'">
+                                </span>
+                            </td>
+
+                            <td class="text-end pe-4">
+
+                                <a class="btn btn-sm btn-outline-secondary me-2"
+                                   th:href="@{/motas/{id}(id=${mota.id})}">
+                                   Detalhe
+                                </a>
+
+                                <a class="btn btn-sm btn-outline-primary me-2"
+                                   th:href="@{/motas/{id}/editar(id=${mota.id})}">
+                                   Editar
+                                </a>
+
+                                <button type="button"
+                                        class="btn btn-sm btn-outline-danger js-delete-mota"
+                                        th:attr="data-id=${mota.id},data-modelo=${mota.modelo}">
+                                        Apagar
+                                </button>
+
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+        </div>
+
+    </section>
+
+</main>
+
+<div th:replace="fragments/scripts :: scripts(${pageScript})"></div>
+
+</body>
+</html>

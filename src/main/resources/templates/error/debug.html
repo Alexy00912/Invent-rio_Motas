@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Debug Exception</title>
+</head>
+<body>
+    <h1>Unhandled exception</h1>
+    <h2 th:text="${exceptionMessage}">Exception message</h2>
+    <pre th:text="${stacktrace}">stacktrace</pre>
+</body>
+</html>
